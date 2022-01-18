@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("height", height)
             intent.putExtra("weight", weight)
 
-            startActivity(intent) // intent를 ResultActivity에 전달
+            startActivity(intent) // intent를 전달하며 ResultActivity 호출
         }
     }
 }

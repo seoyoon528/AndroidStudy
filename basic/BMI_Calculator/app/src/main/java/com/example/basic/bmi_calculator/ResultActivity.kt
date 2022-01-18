@@ -7,7 +7,7 @@ import kotlin.math.pow
 
 class ResultActivity: AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {    // 이 ResultActivity가 실행이 되었을 때 호출되는 함수
+    override fun onCreate(savedInstanceState: Bundle?) {    // ResultActivity가 실행될 때 호출되는 함수
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
 
