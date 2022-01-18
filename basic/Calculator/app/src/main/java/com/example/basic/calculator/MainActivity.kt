@@ -5,9 +5,14 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.room.Room
+import com.example.basic.calculator.model.History
 import java.lang.NumberFormatException
 import kotlin.math.exp
 
@@ -21,12 +26,28 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.resultTextView)
     }
 
+    private val historyLayout: View by lazy {
+        findViewById<View>(R.id.historyLayout)
+    }
+
+    private val historyLinearLayout: LinearLayout by lazy {
+        findViewById<LinearLayout>(R.id.historyLinearLayout)
+    }
+
+    lateinit var db: AppDataBase
+
     private var isOperator = false
     private var hasOperator = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        db = Room.databaseBuilder(      // OnCreate 시 db에 값 할당
+            applicationContext,
+            AppDataBase::class.java,
+            "historyDB"
+        ).build()
     }
 
     fun buttonClicked(v: View) {
@@ -148,6 +169,11 @@ class MainActivity : AppCompatActivity() {
         val expressionText = expressionTextView.text.toString()
         val resultText = calculateExpression()
 
+        Thread (Runnable {      // 디비 조작은 새로운 thread를 열어서 해야함
+            db.historyDao().insertHistory(History(null, expressionText, resultText))
+        }).start()
+
+
         resultTextView.text = ""
         expressionTextView.text = resultText
 
@@ -164,8 +190,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun historyButtonClicked(v: View) {
+        historyLayout.isVisible = true
+        historyLinearLayout.removeAllViews()
 
+        Thread(Runnable {
+            db.historyDao().getAll().reversed().forEach {        // 디비에서 모든 기록 최신 순으로 가져오기
+                runOnUiThread{      // main Thread가 아닌 새로운 Thread를 열었기 때문에 다시 UI를 연결시켜주기 위해 UI Thread를 실행
+                    val historyView = LayoutInflater.from(this).inflate(R.layout.history_row, null, false)
+                    historyView.findViewById<TextView>(R.id.expressionTextView).text = it.expression
+                    historyView.findViewById<TextView>(R.id.resultTextView).text = "= ${it.result}"
+
+                    historyLinearLayout.addView(historyView)
+                }
+            }
+        }).start()
     }
+
+    fun closeHistoryButtonClicked(v: View) {
+        historyLayout.isVisible = false
+    }
+
+    fun historyClearButtonClicked(v: View) {
+        historyLinearLayout.removeAllViews()        // 뷰에서 모든 기록 삭제
+
+        Thread(Runnable {        // 디비에서 모든 기록 삭제
+            db.historyDao().deleteAll()
+        }).start()
+    }
+
 }
 
 fun String.isNumber():  Boolean {    // String 확장 함수 직접 선언  :: 숫자값인지 판단하는 함수
