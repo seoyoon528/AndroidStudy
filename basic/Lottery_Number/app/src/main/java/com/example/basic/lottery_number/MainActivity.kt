@@ -74,11 +74,11 @@ class MainActivity : AppCompatActivity() {
             }
             if(pickNumberSet.size >= 6) {   // Set이 다 찬 경우
                 Toast.makeText(this, "번호는 6개까지만 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener   // 에러 메시지 출력 후에 이후 내용이 실행되지 않도록
+                return@setOnClickListener
             }
-            if(pickNumberSet.contains(numberPicker.value)) {
+            if(pickNumberSet.contains(numberPicker.value)) {    // 이미 뽑힌 번호를 선택한 경우
                 Toast.makeText(this, "이미 선택한 번호입니다.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener   // 에러 메시지 출력 후에 이후 내용이 실행되지 않도록
+                return@setOnClickListener
             }
 
             val textView = numberTextViewList[pickNumberSet.size]
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
     private fun initClearButton() {
         clearButton.setOnClickListener {
             pickNumberSet.clear()
-            numberTextViewList.forEach {  // 리스트의 TextView를 하나하나 꺼내어 줌
+            numberTextViewList.forEach {  // forEach :: 리스트의 TextView를 하나하나 꺼내어 줌
                 it.visibility = View.GONE
             }
             didRun = false
@@ -124,6 +124,6 @@ class MainActivity : AppCompatActivity() {
         numberList.shuffle()    // 리스트 shuffle
         val newList = pickNumberSet.toList() + numberList.subList(0, 6 - pickNumberSet.size)  // numberPicker로 이미 선택한 수만큼 제외 후, 랜덤 발생시켜 새로운 리스트 생성
 
-        return newList.sorted()
+        return newList.sorted()     // 선택된 번호를 오름차순 정렬 후 반환
     }
 }
