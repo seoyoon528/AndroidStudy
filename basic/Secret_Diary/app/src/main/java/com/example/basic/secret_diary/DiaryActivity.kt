@@ -11,7 +11,7 @@ import androidx.core.widget.addTextChangedListener
 
 class DiaryActivity: AppCompatActivity() {
 
-    private val handler = Handler(Looper.getMainLooper())  //  Handler :: Thread와 Thread간의 통신을 엮어주는 안드로이드에서 제공하는 기능
+    private val handler = Handler(Looper.getMainLooper())  //  Handler :: Thread와 Thread간의 통신 방법
                                                                                                         // getMainLooper :: Main Thread의 Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
