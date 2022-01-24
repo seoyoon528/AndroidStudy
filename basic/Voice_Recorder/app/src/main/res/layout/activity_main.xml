@@ -26,10 +26,10 @@
         app:layout_constraintTop_toTopOf="@id/recordButton"
         app:layout_constraintBottom_toBottomOf="@id/recordButton"/>
 
-
     <com.example.basic.voice_recorder.CountUpTextView
         android:id="@+id/recordTimeTextView"
         android:text="00:00"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -41,6 +41,9 @@
         android:id="@+id/recordButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        tools:src="@drawable/ic_record"
+        android:scaleType="fitCenter"
+        android:padding="25dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

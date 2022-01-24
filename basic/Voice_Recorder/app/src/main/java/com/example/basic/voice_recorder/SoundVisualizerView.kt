@@ -72,7 +72,6 @@ class SoundVisualizerView (context: Context, attrs: AttributeSet? = null) : View
                 amplitudePaint
             )
         }
-
     }
 
     fun startVisualizing(isReplaying: Boolean) {
@@ -81,7 +80,13 @@ class SoundVisualizerView (context: Context, attrs: AttributeSet? = null) : View
     }
 
     fun stopVisualizing() {
+        replayingPosition = 0
         handler?.removeCallbacks(visualizeRepeatAction)
+    }
+
+    fun clearVisualization() {      // reset 버튼 누르면 녹음 화면 초기화
+        drawingAmplitudes = emptyList()
+        invalidate()
     }
 
     companion object {

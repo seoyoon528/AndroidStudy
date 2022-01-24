@@ -28,6 +28,10 @@ class CountUpTextView (context: Context, attrs: AttributeSet? = null): AppCompat
         handler?.removeCallbacks(countUpAction)
     }
 
+    fun clearCountTime() {      // reset 버튼 누르면 녹음 시간 초기화
+        updateCountTime(0)
+    }
+
     private fun updateCountTime(countTimeSeconds: Int) {
         val minutes = countTimeSeconds / 60
         val seconds = countTimeSeconds % 60
