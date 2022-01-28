@@ -6,7 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class QuotesPagerAdapter(private val quotes: List<Quote>): RecyclerView.Adapter<QuotesPagerAdapter.QuoteViewHolder>() {
+class QuotesPagerAdapter(
+    private val quotes: List<Quote>,
+    private val isNameRevealed: Boolean
+): RecyclerView.Adapter<QuotesPagerAdapter.QuoteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         QuoteViewHolder (
@@ -15,7 +18,7 @@ class QuotesPagerAdapter(private val quotes: List<Quote>): RecyclerView.Adapter<
                 )
 
     override fun onBindViewHolder(holder: QuoteViewHolder, position: Int) {
-        holder.bind(quotes[position])   // 해당 position의 quote를 전달하며 bind 호출
+        holder.bind(quotes[position], isNameRevealed)   // 해당 position의 quote를 전달하며 bind 호출
     }
 
     override fun getItemCount() = quotes.size
@@ -23,9 +26,17 @@ class QuotesPagerAdapter(private val quotes: List<Quote>): RecyclerView.Adapter<
     class QuoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val quoteTextView: TextView = itemView.findViewById(R.id.quoteTextView)
         private val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
-        fun bind(quote: Quote) {
+
+        fun bind(quote: Quote, isNameRevealed: Boolean) {
             quoteTextView.text = quote.quote
-            nameTextView.text = quote.name
+
+            if(isNameRevealed) {
+                nameTextView.text = quote.name
+                nameTextView.visibility = View.VISIBLE
+            } else {
+                nameTextView.visibility = View.GONE
+            }
+
 
         }
     }
