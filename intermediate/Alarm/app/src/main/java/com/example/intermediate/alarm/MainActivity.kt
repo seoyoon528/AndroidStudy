@@ -1,5 +1,6 @@
 package com.example.intermediate.alarm
 
+import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
@@ -20,20 +21,40 @@ class MainActivity : AppCompatActivity() {
 
         val model = fetchDataFromSharedPreferences()       // 데이터 가져오기
         renderView(model)        // 뷰에 데이터를 그려주기
-
-
     }
 
     private fun initOnOffButton() {
         val onOffButton = findViewById<Button>(R.id.onOffButton)
         onOffButton.setOnClickListener {
-            // 데이터 확인
 
-            // on/off 에 따라 작업 처리
-            // on -> 알람 등록
-            // off -> 알람 제거
+            val model = it.tag  as? AlarmDisplayModel  ?:  return@setOnClickListener     // as? :: 형 변환 실패 시 null
+            val newModel = saveAlarmModel(model.hour, model.minute, model.onOff.not())       // 데이터 확인
+            renderView(newModel)
 
-            // 데이터 저장
+            if (newModel.onOff) {            // on -> 알람 등록
+                val calendar = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, newModel.hour)
+                    set(Calendar.MINUTE, newModel.minute)
+
+                    if (before(Calendar.getInstance())) {        // 지나간 시간에 대한 알람을 설정하는 경우
+                        add(Calendar.DATE, 1)       //  다음날의 알람으로 미뤄줌
+                    }
+                }
+
+                val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                val intent = Intent(this, AlarmReceiver::class.java)
+                val pendingIntent = PendingIntent.getBroadcast(this, ALARM_REQUEST_CODE,        // intent를  PendingIntent로 감싸 전달
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT)        // FLAG_UPDATE_CURRENT :: 기존 것이 있다면 새로운 것으로 업데이트 함
+
+                alarmManager.setInexactRepeating(
+                    AlarmManager.RTC_WAKEUP ,        // 절대 시간 기준으로 알람 설정
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY,           // 하루 뒤에 실행
+                    pendingIntent
+                )
+            } else {            // off -> 알람 제거
+                cancelAlarm()
+            }
         }
     }
 
@@ -47,14 +68,9 @@ class MainActivity : AppCompatActivity() {
 
                  val model = saveAlarmModel(hour, minute, false)        // 그 시간을 가져와 데이터 저장
                  renderView(model)          // 뷰 업데이트
-
-                val pendingIntent = PendingIntent.getBroadcast(this, ALARM_REQUEST_CODE, Intent(this, AlarmReceiver::class.java), PendingIntent.FLAG_NO_CREATE)         // 등록되어 있는 알람이 있다면
-               pendingIntent?.cancel()          // 기존 알람 삭제
+                 cancelAlarm()        // 기존 알람 삭제
 
                 }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show()
-
-
-
 
         }
     }
@@ -63,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         val model = AlarmDisplayModel (
             hour = hour,
             minute = minute,
-            onOff = false
+            onOff = onOff
         )
 
         val sharedPreferences = getSharedPreferences("time", Context.MODE_PRIVATE)
@@ -118,6 +134,12 @@ class MainActivity : AppCompatActivity() {
             tag = model
         }
     }
+
+    private fun cancelAlarm() {
+        val pendingIntent = PendingIntent.getBroadcast(this, ALARM_REQUEST_CODE, Intent(this, AlarmReceiver::class.java), PendingIntent.FLAG_NO_CREATE)         // 등록되어 있는 알람이 있다면
+        pendingIntent?.cancel()
+    }
+
     companion object {
         private const val SHARED_PREFERENCES_NAME = "time"
         private const val ALARM_KEY = "alarm"
