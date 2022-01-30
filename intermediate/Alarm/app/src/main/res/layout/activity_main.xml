@@ -31,7 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:text="09:30" />
+        android:text="09:30" />
 
     <TextView
         android:id="@+id/ampmTextView"
