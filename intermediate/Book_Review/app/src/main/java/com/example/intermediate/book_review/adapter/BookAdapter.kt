@@ -32,7 +32,7 @@ class BookAdapter: ListAdapter<Book, BookAdapter.BookItemViewHolder>(diffUtil) {
             }
 
             override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean {        //  안에 있는 Contents가 같은지 다른지 판단
-                return oldItem.id == newItem
+                return oldItem.id == newItem.id
             }
 
         }
