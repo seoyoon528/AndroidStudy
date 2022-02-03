@@ -29,9 +29,9 @@
     - **Android Permission**
     - **View Animation**
     - **Activity LifeCycle**
+    - **화면 가로 전환**
     - **Content Provider**
         - **SAF(Storage Access Framework)**
-    - **화면 가로 전환**
     
 - **뽀모도로 타이머**
     - **CountDownTimer**
@@ -50,9 +50,28 @@
 
 
 <br/>
-## 🐣Intermediate
 
+## 🐣Intermediate
 - **푸시 알림 수신기**
+    - **Firebase**
+    - **Firebase Cloud Messaging**
+    - **Notification**
+    
 - **오늘의 명언**
+    - **Firebase Remote Config**
+    - **ViewPager2**
+    
 - **알람앱**
+    - **Broadcast Receiver**
+    - **AlarmManager**
+        - **Real Time**
+        - **Elapsed Time**
+    - **Notification**
+    
 - **도서 리뷰 앱**
+    - **RecyclerView**
+    - **View Binding**
+    - **Retrofit (API)**
+    - **Glide**
+    - **Android Room**
+    - **인터파크 도서 OpenAPI**
