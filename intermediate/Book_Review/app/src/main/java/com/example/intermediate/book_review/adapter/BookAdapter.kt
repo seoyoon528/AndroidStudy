@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.intermediate.book_review.databinding.ItemBookBinding
 import com.example.intermediate.book_review.model.Book
 
@@ -14,6 +15,12 @@ class BookAdapter: ListAdapter<Book, BookAdapter.BookItemViewHolder>(diffUtil) {
 
         fun bind(bookModel: Book) {
             binding.titleTextView.text = bookModel.title        // 뷰 바인딩
+            binding.descriptionTextView.text = bookModel.description
+
+            Glide           // URL을 load해 imageView에 binding
+                .with(binding.coverImageView.context)
+                .load(bookModel.coverSmallUrl)
+                .into(binding.coverImageView)
         }
     }
 
