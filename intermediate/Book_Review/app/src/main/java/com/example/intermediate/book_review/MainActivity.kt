@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
     private fun initHistoryRecyclerView() {
         historyAdapter = HistoryAdapter (historyDeleteClickedListener = {
             deleteSearchKeyword(it)
-        })
+        }, clickItemSearchListener = {search(it)})
         binding.historyRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.historyRecyclerView.adapter = historyAdapter
     }

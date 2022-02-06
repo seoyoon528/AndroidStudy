@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.intermediate.book_review.MainActivity
 import com.example.intermediate.book_review.databinding.ItemHistoryBinding
 import com.example.intermediate.book_review.model.History
 
 //  historyDeleteClickedListener: (String) -> Unit :: MainActivity에서 HistoryAdapter에 함수를 던져서 ClickListener가 일어날 때 함수를 호출하는 방식
-class HistoryAdapter(val historyDeleteClickedListener: (String) -> Unit): ListAdapter<History, HistoryAdapter.HistoryItemViewHolder>(diffUtil) {
+class HistoryAdapter(val historyDeleteClickedListener: (String) -> Unit, val clickItemSearchListener: (String) -> Unit): ListAdapter<History, HistoryAdapter.HistoryItemViewHolder>(diffUtil) {
 
     inner class HistoryItemViewHolder(private val binding: ItemHistoryBinding): RecyclerView.ViewHolder(binding.root) {
 
@@ -19,9 +20,9 @@ class HistoryAdapter(val historyDeleteClickedListener: (String) -> Unit): ListAd
                     historyDeleteClickedListener(historyModel.keyword.orEmpty())
                 }
 
-//                binding.root.setOnClickListener {
-//
-//                }
+                binding.root.setOnClickListener {       //  검색 기록 클릭 시 도서 재 검색
+                    clickItemSearchListener(historyModel.keyword.orEmpty())
+                }
             }
     }
 
