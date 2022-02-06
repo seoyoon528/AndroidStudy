@@ -1,5 +1,7 @@
 package com.example.intermediate.book_review
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -31,15 +33,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)       // binding 가져옴
         setContentView(binding.root)
 
-        db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "BookSearchDB"
-        ).build()
+        db = getAppDatabase(this)
 
         initBookRecyclerView()      // 도서 목록 리사이클러뷰 초기화
         initHistoryRecyclerView()       //  검색 기록 리사이클러뷰 초기화
@@ -51,7 +48,6 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         bookService = retrofit.create(BookService::class.java)
-
         bookService.getBestSellerBooks(getString(R.string.interparkAPIKey))
             .enqueue(object: Callback<BestSellerDto> {
                 override fun onResponse(
@@ -63,11 +59,10 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     response.body()?.let {
-                        Log.d("MainActivity", it.toString())
+//                        Log.d("MainActivity", it.toString())
                         it.books.forEach {book ->
-                            Log.d("MainActivity", book.toString())
+//                            Log.d("MainActivity", book.toString())
                         }
-
                         adapter.submitList(response.body()?.books.orEmpty())        // 리사이클러뷰 갱신
                     }
                 }
@@ -91,9 +86,9 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     response.body()?.let {
-                        Log.d("MainActivity", it.toString())
+//                        Log.d("MainActivity", it.toString())
                         it.books.forEach {book ->
-                            Log.d("MainActivity", book.toString())
+//                            Log.d("MainActivity", book.toString())
                         }
 
                         adapter.submitList(response.body()?.books.orEmpty())        // 리사이클러뷰 갱신
@@ -108,8 +103,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBookRecyclerView() {
-        adapter = BookAdapter()
-
+        adapter = BookAdapter(itemClickedListener = {
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("bookModel", it)       // 'Book' class 자체를 넘김
+            startActivity(intent)
+        })
         binding.bookRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.bookRecyclerView.adapter = adapter
     }
@@ -122,6 +120,7 @@ class MainActivity : AppCompatActivity() {
         binding.historyRecyclerView.adapter = historyAdapter
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initSearchEditText() {
         binding.searchEditText.setOnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == MotionEvent.ACTION_DOWN) {        // 검색어 입력 후 엔터 누르면

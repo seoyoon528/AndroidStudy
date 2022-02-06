@@ -9,13 +9,17 @@ import com.bumptech.glide.Glide
 import com.example.intermediate.book_review.databinding.ItemBookBinding
 import com.example.intermediate.book_review.model.Book
 
-class BookAdapter: ListAdapter<Book, BookAdapter.BookItemViewHolder>(diffUtil) {
+class BookAdapter(private val itemClickedListener: (Book) -> Unit): ListAdapter<Book, BookAdapter.BookItemViewHolder>(diffUtil) {
 
     inner class BookItemViewHolder(private val binding: ItemBookBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(bookModel: Book) {
             binding.titleTextView.text = bookModel.title        // 뷰 바인딩
             binding.descriptionTextView.text = bookModel.description
+
+            binding.root.setOnClickListener {       //  클릭 시 도서 상세 보여주기 이벤트
+                itemClickedListener(bookModel)
+            }
 
             Glide           // URL을 load해 imageView에 binding
                 .with(binding.coverImageView.context)
