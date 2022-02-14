@@ -76,3 +76,10 @@
     - **Android Room**
     - **Postman**
     - **인터파크 도서 OpenAPI**
+    - 
+- **틴더**
+    - **Firebase Authentication**
+        - **Email Login**
+        - **Facebook Login**
+    - **Firebase Realtime Database**
+    - **CardStackView Library**
