@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "226373786392",
+    "firebase_url": "https://tinder-bbc50-default-rtdb.firebaseio.com",
+    "project_id": "tinder-bbc50",
+    "storage_bucket": "tinder-bbc50.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226373786392:android:5aec9f0f64fe316ac61c6d",
+        "android_client_info": {
+          "package_name": "com.example.tinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226373786392-n8a7cej546juurcbgkle0qh2f3eq390i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC49MIju8BkR9FNmsnE71JyPT5Kgsl-NuU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "226373786392-n8a7cej546juurcbgkle0qh2f3eq390i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
