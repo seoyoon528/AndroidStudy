@@ -1,12 +1,22 @@
 package com.example.tinder
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -14,16 +24,19 @@ import com.google.firebase.ktx.Firebase
 class LoginActivity: AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var callbackManager: CallbackManager
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         auth = Firebase.auth        //  kotlin스러운 코드
+        callbackManager = CallbackManager.Factory.create()
 
         initSignUpButton()
         initLoginButton()
         initEmailAndPasswordEditText()
+        initFacebookLoginButton()
     }
 
     private fun initSignUpButton() {
@@ -83,11 +96,53 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
+    private fun initFacebookLoginButton() {
+        val facebookLoginButton = findViewById<LoginButton>(R.id.facebookLoginButton)
+
+        facebookLoginButton.setReadPermissions("email", "public_profile")
+        facebookLoginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+
+            // 로그인 성공
+            override fun onSuccess(result: LoginResult) {
+                val credential = FacebookAuthProvider.getCredential(result.accessToken.token)       //  accessToken을 가져옴
+                auth.signInWithCredential(credential)       // facebook 로그인 한 accessToken 넘겨줌
+                    .addOnCompleteListener(this@LoginActivity) { task ->
+                        if (task.isSuccessful) {
+                            finish()
+                        } else {
+                            Toast.makeText(this@LoginActivity, "페이스북 로그인이 실패했습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+            }
+
+            // 로그인 취소
+            override fun onCancel() {}
+
+            // 로그인 실패
+            override fun onError(error: FacebookException?) {
+                Toast.makeText(this@LoginActivity, "페이스북 로그인이 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+    }
+
     private fun getInputEmail(): String {
         return findViewById<EditText>(R.id.emailEditText).text.toString()
     }
 
     private fun getInputPassword(): String {
         return findViewById<EditText>(R.id.passwordEditText).text.toString()
+    }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        callbackManager.onActivityResult(resultCode, resultCode, data)
+//    }
+
+    val getContent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data
+        // Handle the Intent
+        }
     }
 }
