@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import com.example.tinder.databinding.ActivityLoginBinding
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -25,10 +26,12 @@ class LoginActivity: AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var callbackManager: CallbackManager
+    private lateinit var binding: ActivityLoginBinding
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         auth = Firebase.auth        //  kotlin스러운 코드
         callbackManager = CallbackManager.Factory.create()
@@ -133,11 +136,6 @@ class LoginActivity: AppCompatActivity() {
     private fun getInputPassword(): String {
         return findViewById<EditText>(R.id.passwordEditText).text.toString()
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        callbackManager.onActivityResult(resultCode, resultCode, data)
-//    }
 
     val getContent = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
