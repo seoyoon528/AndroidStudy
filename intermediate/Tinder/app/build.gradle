@@ -48,6 +48,7 @@ dependencies {
     // firebase
     implementation platform('com.google.firebase:firebase-bom:29.1.0')
     implementation 'com.google.firebase:firebase-auth-ktx'   // firebase - Authentication
+    implementation 'com.google.firebase:firebase-database-ktx'  // firebase - Realtime Database
 
     // facebook
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
