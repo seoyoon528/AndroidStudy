@@ -3,10 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/user/Desktop/AndroidStudy/intermediate/Tinder/app/src/main/res/layout/activity_like.xml" value="0.15625" />
+        <entry key="..\:/Users/user/Desktop/AndroidStudy/intermediate/Tinder/app/src/main/res/layout/activity_like.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/user/Desktop/AndroidStudy/intermediate/Tinder/app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="..\:/Users/user/Desktop/AndroidStudy/intermediate/Tinder/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/user/Desktop/AndroidStudy/intermediate/Tinder/app/src/main/res/layout/activity_matched_user.xml" value="0.15625" />
         <entry key="..\:/Users/user/Desktop/AndroidStudy/intermediate/Tinder/app/src/main/res/layout/item_card.xml" value="0.1390625" />
+        <entry key="..\:/Users/user/Desktop/AndroidStudy/intermediate/Tinder/app/src/main/res/layout/item_matched_user.xml" value="0.115625" />
         <entry key="..\:/Users/user/Desktop/AndroidStudy/intermediate/Tinder/app/src/main/res/layout/test_layout.xml" value="0.15885416666666666" />
       </map>
     </option>

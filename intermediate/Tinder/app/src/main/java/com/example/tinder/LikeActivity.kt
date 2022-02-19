@@ -1,5 +1,6 @@
 package com.example.tinder
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -49,12 +50,21 @@ class LikeActivity : AppCompatActivity(), CardStackListener {
                 TODO("Not yet implemented")
             }
         })
+
         initCardStackView()
+        initMatchedListButton()
     }
 
     private fun initCardStackView() {
         binding.cardStackView.layoutManager = manager
         binding.cardStackView.adapter  = adapter
+    }
+
+    private fun initMatchedListButton() {
+        val matchedListButton = binding.matchListButton
+        matchedListButton.setOnClickListener {
+            startActivity(Intent(this, MatchedUserActivity::class.java))
+        }
     }
 
     private fun getUnSelectedUsers() {      //  한번도 선택하지 않았던 User 정보 가져오기
@@ -149,7 +159,7 @@ class LikeActivity : AppCompatActivity(), CardStackListener {
             .child(getCurrentUserID())
             .setValue(true)
 
-        // todo 매칭된 시점을 봐야함
+        saveMatchIfOtherUserLikedMe(card.userId)
 
         Toast.makeText(this, "${card.name}님을 Like 하셨습니다.", Toast.LENGTH_SHORT).show()
     }
@@ -167,6 +177,31 @@ class LikeActivity : AppCompatActivity(), CardStackListener {
         Toast.makeText(this, "${card.name}님을 Dislike 하셨습니다.", Toast.LENGTH_SHORT).show()
     }
 
+    private fun saveMatchIfOtherUserLikedMe(otherUserId: String) {
+        val otherUserDB = userDB.child(getCurrentUserID()).child("likedBy").child("like").child(otherUserId)
+        otherUserDB.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.value == true) {
+                    userDB.child(getCurrentUserID())        // match가 되었음을 나의 DB에 저장
+                        .child("likedBy")
+                        .child("match")
+                        .child(otherUserId)
+                        .setValue(true)
+
+                    userDB.child(otherUserId)        // match가 되었음을 상대방의 DB에 저장
+                        .child("likedBy")
+                        .child("match")
+                        .child(getCurrentUserID())
+                        .setValue(true)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }     //  event를 한 번만 확인
+
+        })
+    }
     override fun onCardDragging(direction: Direction?, ratio: Float) {}
 
     override fun onCardRewound() {}
