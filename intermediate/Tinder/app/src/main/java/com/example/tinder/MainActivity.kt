@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))      //  LoginActivity 실행
         } else {        // 로그인 되어 있는 경우
             startActivity(Intent(this, LikeActivity::class.java))      //  LikeActivity 실행
+            finish()
         }
     }
 }

@@ -52,12 +52,23 @@ class LikeActivity : AppCompatActivity(), CardStackListener {
         })
 
         initCardStackView()
+        initSignOut()
         initMatchedListButton()
     }
 
     private fun initCardStackView() {
         binding.cardStackView.layoutManager = manager
         binding.cardStackView.adapter  = adapter
+    }
+
+    private fun initSignOut() {
+        val signOutButton = binding.signOutButton
+        signOutButton.setOnClickListener {
+            auth.signOut()
+
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()        //  MainActivity로 돌아감
+        }
     }
 
     private fun initMatchedListButton() {
