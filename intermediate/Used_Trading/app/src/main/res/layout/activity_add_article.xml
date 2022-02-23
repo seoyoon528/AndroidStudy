@@ -48,6 +48,7 @@
     <EditText
         android:id="@+id/priceEditText"
         android:hint="가격"
+        android:inputType="numberDecimal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
