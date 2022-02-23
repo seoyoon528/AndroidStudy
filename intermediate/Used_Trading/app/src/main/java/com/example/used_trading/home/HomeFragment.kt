@@ -1,5 +1,6 @@
 package com.example.used_trading.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.used_trading.DBKey.Companion.DB_ARTICLES
 import com.example.used_trading.R
 import com.example.used_trading.databinding.FragmentHomeBinding
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ChildEventListener
@@ -52,13 +54,23 @@ class HomeFragment: Fragment(R.layout.fragment_home) {
         val fragmentHomeBinding = FragmentHomeBinding.bind(view)        // null이 될 수 없도록 지역변수로 binding 선언
         binding = fragmentHomeBinding
 
-        articleAdapter = ArticleAdapter()
 
         articleList.clear()     // List 초기화
+        articleAdapter = ArticleAdapter()
+        articleDB = Firebase.database.reference.child(DB_ARTICLES)
+
         fragmentHomeBinding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
         fragmentHomeBinding.articleRecyclerView.adapter = articleAdapter
 
-        articleDB = Firebase.database.reference.child(DB_ARTICLES)
+        fragmentHomeBinding.addFloatingButton.setOnClickListener {
+                //  todo 로그인 기능 구현 후에 주석 지우기
+//            if (auth.currentUser != null) {     //  로그인을 한 User인 경우에만 글 작성 가능
+                val intent = Intent(requireContext(), AddArticleActivity::class.java)
+                startActivity(intent)
+//            } else {
+//                Snackbar.make(view, "로그인 후 사용해주세요", Snackbar.LENGTH_LONG).show()
+//            }
+        }
 
         articleDB.addChildEventListener(listener)
 
