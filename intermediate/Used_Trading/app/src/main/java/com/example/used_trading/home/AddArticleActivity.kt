@@ -55,7 +55,7 @@ class AddArticleActivity: AppCompatActivity() {
                 shouldShowRequestPermissionRationale(android.Manifest.permission.READ_EXTERNAL_STORAGE) -> {   //  교육용 팝업이 필요한 경우
                     showPermissionContextPopup()
                 } else -> {     //  그 외의 경우
-                    requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 100)      //  해당 권한에 대해 요청
+                    requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1010)      //  해당 권한에 대해 요청
                 }
             }
         }
@@ -153,22 +153,17 @@ class AddArticleActivity: AppCompatActivity() {
 
         if (result.resultCode != Activity.RESULT_OK) {
             return@registerForActivityResult
-        }
+        } else {
 
-        when (result.resultCode) {
-            200 -> {
-                val uri = result.data?.data
-                if (uri != null) {
-                    findViewById<ImageView>(R.id.photoImageView).setImageURI(uri)
-                    selectedUri = uri
-                } else {
-                    Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
-                }
-            }
-            else -> {
+            val uri = result.data?.data
+            if (uri != null) {
+                findViewById<ImageView>(R.id.photoImageView).setImageURI(uri)
+                selectedUri = uri
+            } else {
                 Toast.makeText(this, "사진을 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
         }
+
     }
 
     private fun showPermissionContextPopup() {
@@ -176,7 +171,7 @@ class AddArticleActivity: AppCompatActivity() {
             .setTitle("권한이 필요합니다.")
             .setMessage("사진을 가져오기 위해 필요합니다.")
             .setPositiveButton("동의", { _, _ ->
-                requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 100)
+                requestPermissions(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1010)
             })
             .create()
             .show()
