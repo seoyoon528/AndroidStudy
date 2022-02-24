@@ -63,13 +63,12 @@ class HomeFragment: Fragment(R.layout.fragment_home) {
         fragmentHomeBinding.articleRecyclerView.adapter = articleAdapter
 
         fragmentHomeBinding.addFloatingButton.setOnClickListener {
-                //  todo 로그인 기능 구현 후에 주석 지우기
-//            if (auth.currentUser != null) {     //  로그인을 한 User인 경우에만 글 작성 가능
+            if (auth.currentUser != null) {     //  로그인을 한 User인 경우에만 글 작성 가능
                 val intent = Intent(requireContext(), AddArticleActivity::class.java)
                 startActivity(intent)
-//            } else {
-//                Snackbar.make(view, "로그인 후 사용해주세요", Snackbar.LENGTH_LONG).show()
-//            }
+            } else {
+                Snackbar.make(view, "로그인 후 사용해주세요", Snackbar.LENGTH_LONG).show()
+            }
         }
 
         articleDB.addChildEventListener(listener)
