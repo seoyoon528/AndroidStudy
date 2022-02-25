@@ -95,7 +95,7 @@ class AddArticleActivity: AppCompatActivity() {
             .addOnCompleteListener {
                 if (it.isSuccessful) {      //  업로드 성공 시
                     storage.reference.child("article/photo").child(fileName)        //  해당 파일로 가서
-                        .downloadUrl        //  url 다운로드
+                        .downloadUrl        //  url 다운로드   (업로드 완료 Callback ≠ 다운로드할 수 있는  Url을 받아올 수 있는 Callback)
                         .addOnSuccessListener { uri ->
                             successHandler(uri.toString())
                         }

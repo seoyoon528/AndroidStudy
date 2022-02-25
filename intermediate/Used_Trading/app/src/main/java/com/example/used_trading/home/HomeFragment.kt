@@ -36,7 +36,7 @@ class HomeFragment: Fragment(R.layout.fragment_home) {
     private val listener = object: ChildEventListener {
         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
 
-            val articleModel = snapshot.getValue(ArticleModel::class.java)      //  Model class 자체로 DB에 데이터를 올리고 내려받음
+            val articleModel = snapshot.getValue(ArticleModel::class.java)      //  getValue로 Model class 자체를 DB에 데이터를 올리고 내려받음 (data class에 생성자 필요)
             articleModel ?: return      // ArticleModel이 null이라면 return
 
             articleList.add(articleModel)       //  null이 아니라면
