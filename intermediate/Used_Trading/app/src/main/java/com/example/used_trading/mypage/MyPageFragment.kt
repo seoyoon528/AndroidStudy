@@ -80,8 +80,8 @@ class MyPageFragment: Fragment(R.layout.fragment_mypage) {
         fragmentMyPageBinding.passwordEditText.addTextChangedListener {
             binding?.let { binding ->
                 val enable = binding.emailEditText.text.isNotEmpty() && binding.passwordEditText.text.isNotEmpty()
-                binding.emailEditText.isEnabled = enable
-                binding.passwordEditText.isEnabled = enable
+                binding.signInOutButton.isEnabled = enable
+                binding.signUpButton.isEnabled = enable
             }
         }
     }
