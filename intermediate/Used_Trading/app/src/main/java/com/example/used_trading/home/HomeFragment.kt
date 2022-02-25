@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.used_trading.DBKey.Companion.CHILD_CHAT
 import com.example.used_trading.DBKey.Companion.DB_ARTICLES
+import com.example.used_trading.DBKey.Companion.DB_USERS
 import com.example.used_trading.R
+import com.example.used_trading.chatlist.ChatListItem
 import com.example.used_trading.databinding.FragmentHomeBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +25,7 @@ class HomeFragment: Fragment(R.layout.fragment_home) {
 
     private lateinit var articleAdapter: ArticleAdapter
     private lateinit var articleDB: DatabaseReference
+    private lateinit var userDB: DatabaseReference
 
     private var binding: FragmentHomeBinding? = null
     private val auth : FirebaseAuth by lazy {
@@ -54,10 +58,42 @@ class HomeFragment: Fragment(R.layout.fragment_home) {
         val fragmentHomeBinding = FragmentHomeBinding.bind(view)        // null이 될 수 없도록 지역변수로 binding 선언
         binding = fragmentHomeBinding
 
-
         articleList.clear()     // List 초기화
-        articleAdapter = ArticleAdapter()
-        articleDB = Firebase.database.reference.child(DB_ARTICLES)
+        userDB = Firebase.database.reference.child(DB_USERS)        //  user DB 초기화
+        articleDB = Firebase.database.reference.child(DB_ARTICLES)      //  article DB 초기화
+        articleAdapter = ArticleAdapter(onItemClicked = { articleModel ->
+
+            if (auth.currentUser != null) {     //  로그인을 한 상태
+
+                if (auth.currentUser.uid != articleModel.sellerId)  {       //  현재 사용자 id와 아이템을 등록한 사용자의 id가 같지 않다면
+
+                    val chatRoom = ChatListItem (
+                        buyerId = auth.currentUser.uid,
+                        sellerId = articleModel.sellerId,
+                        itemTitle = articleModel.title,
+                        key = System.currentTimeMillis()
+                    )
+
+                    userDB.child(auth.currentUser.uid)
+                        .child(CHILD_CHAT)
+                        .push()
+                        .setValue(chatRoom)
+
+                    userDB.child(articleModel.sellerId)
+                        .child(CHILD_CHAT)
+                        .push()
+                        .setValue(chatRoom)
+
+                    Snackbar.make(view, "채팅방이 생성되었습니다. 채팅탭에서 확인해주세요.", Snackbar.LENGTH_LONG).show()
+
+                } else {         //  현재 사용자 id와 아이템을 등록한 사용자의 id가 같다면
+                    Snackbar.make(view, "내가 등록한 아이템입니다", Snackbar.LENGTH_LONG).show()
+                }
+
+            } else {        //  로그인을 안 한 상태
+                Snackbar.make(view, "로그인 후 사용해주세요", Snackbar.LENGTH_LONG).show()
+            }
+        })
 
         fragmentHomeBinding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
         fragmentHomeBinding.articleRecyclerView.adapter = articleAdapter
