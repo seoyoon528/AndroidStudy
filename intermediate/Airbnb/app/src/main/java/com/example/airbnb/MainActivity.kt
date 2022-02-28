@@ -21,6 +21,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         findViewById(R.id.mapView)
     }
 
+    private val viewPager: ViewPager2 by lazy {
+        findViewById(R.id.houseViewPager)
+    }
+    private val viewPagerAdapter = HouseViewPagerAdapter()
+
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
 
@@ -31,6 +36,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // naver Map 객체 가져오기
         mapView.getMapAsync (this)      //  callback method :: OnMapReadyCallback
+
+        viewPager.adapter = viewPagerAdapter
     }
 
     override fun onMapReady(map: NaverMap) {
@@ -61,17 +68,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+        // API로 데이터 불러오기
         retrofit.create(HouseService::class.java).also {
             it.getHouseList()
-                .enqueue(object : Callback<HouseDto>{
+                .enqueue(object : Callback<HouseDto> {
                     override fun onResponse(call: Call<HouseDto>, response: Response<HouseDto>) {
                         if (response.isSuccessful.not()) {
                             // 실패 처리
                             return
                         }
-
                         response.body()?.let { dto ->
                             updateMarker(dto.items)     //  마커 꽂기 메소드
+                            viewPagerAdapter.submitList(dto.items)      // 뷰페이저에 데이터 리스트 집어 넣기
                         }
                     }
 
