@@ -3,10 +3,17 @@ package com.example.airbnb
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -44,10 +51,50 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         locationSource = FusedLocationSource(this@MainActivity, LOCATION_PERMISSION_REQUEST_CODE )
         naverMap.locationSource = locationSource
 
-        // 지정한 위도, 경도 위치에 핀(마커) 꽂기
-        val marker = Marker()
-        marker.position = LatLng(37.52628019035669, 126.92851218398253)
-        marker.map = naverMap
+        getHouseListFromAPI()
+    }
+
+    private fun getHouseListFromAPI() {
+        // Retrofit 객체
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://run.mocky.io")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        retrofit.create(HouseService::class.java).also {
+            it.getHouseList()
+                .enqueue(object : Callback<HouseDto>{
+                    override fun onResponse(call: Call<HouseDto>, response: Response<HouseDto>) {
+                        if (response.isSuccessful.not()) {
+                            // 실패 처리
+                            return
+                        }
+
+                        response.body()?.let { dto ->
+                            updateMarker(dto.items)     //  마커 꽂기 메소드
+                        }
+                    }
+
+                    override fun onFailure(call: Call<HouseDto>, t: Throwable) {
+                        // 실패 처리
+                    }
+
+                })
+        }
+    }
+
+    // 지정한 위도, 경도 위치에 핀(마커) 꽂기
+    private fun updateMarker(houses: List<HouseModel>) {
+        houses.forEach { house ->
+            naverMap.apply {
+                val marker = Marker()
+                marker.position = LatLng(house.lat, house.lng)
+                marker.map = naverMap
+                marker.tag = house.id
+                marker.icon = MarkerIcons.BLACK
+                marker.iconTintColor = Color.RED
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
