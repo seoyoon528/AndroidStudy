@@ -9,6 +9,7 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import com.naver.maps.map.widget.LocationButtonView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,9 +26,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         findViewById(R.id.houseViewPager)
     }
     private val viewPagerAdapter = HouseViewPagerAdapter()
+    private val recyclerAdapter = HouseListAdapter()
 
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
+
+    private val recyclerView: RecyclerView by lazy {
+        findViewById(R.id.recyclerView)
+    }
+
+    private val currentLocationButton: LocationButtonView by lazy {
+        findViewById(R.id.currentLocationButton)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +48,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView.getMapAsync (this)      //  callback method :: OnMapReadyCallback
 
         viewPager.adapter = viewPagerAdapter
+        recyclerView.adapter = recyclerAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onMapReady(map: NaverMap) {
@@ -52,7 +64,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // 현위치 설정
         val uiSetting = naverMap.uiSettings
-        uiSetting.isLocationButtonEnabled = true        //  현위치 버튼 활성화
+        uiSetting.isLocationButtonEnabled = false
+        currentLocationButton.map = naverMap       //  현위치 버튼 위치 옮겨 활성화
 
         // 현재 위치 권한 받기
         locationSource = FusedLocationSource(this@MainActivity, LOCATION_PERMISSION_REQUEST_CODE )
@@ -80,6 +93,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         response.body()?.let { dto ->
                             updateMarker(dto.items)     //  마커 꽂기 메소드
                             viewPagerAdapter.submitList(dto.items)      // 뷰페이저에 데이터 리스트 집어 넣기
+                            recyclerAdapter.submitList(dto.items)       //  리사이클러뷰에 데이터 리스트 집어 넣기
                         }
                     }
 
