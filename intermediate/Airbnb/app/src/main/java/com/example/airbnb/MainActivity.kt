@@ -1,8 +1,10 @@
 package com.example.airbnb
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -28,7 +30,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, Overlay.OnClickLis
     private val viewPager: ViewPager2 by lazy {
         findViewById(R.id.houseViewPager)
     }
-    private val viewPagerAdapter = HouseViewPagerAdapter()
+
+    // viewPager 클릭 시 외부에 공유하기 기능
+    private val viewPagerAdapter = HouseViewPagerAdapter(itemClicked = {
+        val intent = Intent()
+            .apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "[지금 이 가격에 예약하세요!] ${it.title} ${it.price} 사진보기 : ${it.imgUrl}")
+                type = "text/plain"
+            }
+        startActivity(Intent.createChooser(intent, null))
+    })
     private val recyclerAdapter = HouseListAdapter()
 
     private lateinit var naverMap: NaverMap
@@ -40,6 +52,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, Overlay.OnClickLis
 
     private val currentLocationButton: LocationButtonView by lazy {
         findViewById(R.id.currentLocationButton)
+    }
+
+    private val bottomSheetTitleTextView: TextView by lazy {
+        findViewById(R.id.bottomSheetTitleTextView)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,6 +127,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, Overlay.OnClickLis
                             updateMarker(dto.items)     //  마커 꽂기 메소드
                             viewPagerAdapter.submitList(dto.items)      // 뷰페이저에 데이터 리스트 집어 넣기
                             recyclerAdapter.submitList(dto.items)       //  리사이클러뷰에 데이터 리스트 집어 넣기
+
+                            bottomSheetTitleTextView.text = "${dto.items.size}개의 숙소"
                         }
                     }
 
