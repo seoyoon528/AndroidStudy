@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, Overlay.OnClickLis
                 putExtra(Intent.EXTRA_TEXT, "[지금 이 가격에 예약하세요!] ${it.title} ${it.price} 사진보기 : ${it.imgUrl}")
                 type = "text/plain"
             }
+
         startActivity(Intent.createChooser(intent, null))
     })
     private val recyclerAdapter = HouseListAdapter()
