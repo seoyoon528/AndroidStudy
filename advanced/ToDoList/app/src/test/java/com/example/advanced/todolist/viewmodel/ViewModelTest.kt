@@ -2,7 +2,9 @@ package com.example.advanced.todolist.viewmodel
 
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
 import com.example.advanced.todolist.di.AppTestModule
+import com.example.advanced.todolist.livedata.LiveDataTestObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -20,7 +22,7 @@ import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 
 @ExperimentalCoroutinesApi          // 코루틴 API를 공통으로 사용하기 위해 (setMain, resetMain)
-internal class ToDoViewModelTest: KoinTest {
+internal abstract class ViewModelTest: KoinTest {
 
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
@@ -44,6 +46,13 @@ internal class ToDoViewModelTest: KoinTest {
     fun tearDown() {
         stopKoin()
         Dispatchers.resetMain()     // MainDispatcher를 초기화 해주어야 메모리 누수가 발생하지 않음
+    }
+
+    protected fun <T> LiveData<T>.test(): LiveDataTestObserver<T> {         //  LiveData 내부에 어떠한 인스턴스를 담을 수 있는 형태로 만들기 위해 generic. // LiveDataTestObserver를 반환함으로써 들어온 인스턴스를 검증
+        val testObserver = LiveDataTestObserver<T> ()
+        observeForever(testObserver)        // 안드로이드 Lifecycle에 있는 LiveData 함수 넣어줌
+
+        return testObserver
     }
 
 
