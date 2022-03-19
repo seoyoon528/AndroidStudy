@@ -2,8 +2,12 @@ package com.example.advanced.todolist.data.repository
 
 import com.example.advanced.todolist.data.entity.ToDoEntity
 
-class DefaultToDoRepository: ToDoRepository {
+class DefaultToDoRepository: ToDoRepository {       //  구현체
     override suspend fun getToDoList(): List<ToDoEntity> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertToDoItem(toDoItem: ToDoEntity) {
         TODO("Not yet implemented")
     }
 

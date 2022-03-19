@@ -24,13 +24,13 @@ internal class ListViewModel(
     private val updateToDoListUseCase: UpdateToDoListUseCase,
     private val deleteAllToDoItemUseCase: DeleteAllToDoItemUseCase
 
-): ViewModel() {
+): BaseViewModel() {
 
     private var _toDoListLiveData = MutableLiveData<ToDoListState>(ToDoListState.UnInitialized)     // 처음 state = Uninitialized
     val todoListLiveData: LiveData<ToDoListState> = _toDoListLiveData
 
     // Coroutine Block 생성
-    fun fetchData(): Job = viewModelScope.launch {
+    override fun fetchData(): Job = viewModelScope.launch {
         _toDoListLiveData.postValue(ToDoListState.Loading)      //  데이터 Loading
         _toDoListLiveData.postValue(ToDoListState.Success(getToDoListUseCase()))       // 데이터를 성공적으로 불러왔을 경우, 데이터가 반영되도록 postValue에 넣어줌
     }
