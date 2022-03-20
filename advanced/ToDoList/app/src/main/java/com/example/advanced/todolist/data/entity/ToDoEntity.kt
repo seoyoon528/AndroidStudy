@@ -1,8 +1,12 @@
 package com.example.advanced.todolist.data.entity
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 data class ToDoEntity (
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val title: String,
     val description: String,
     val hasCompleted: Boolean = false
-        )
+)
