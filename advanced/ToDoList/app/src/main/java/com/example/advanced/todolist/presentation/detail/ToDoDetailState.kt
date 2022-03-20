@@ -15,5 +15,11 @@ sealed class ToDoDetailState {
         val toDoItem: ToDoEntity
     ): ToDoDetailState()
 
+    object Delete: ToDoDetailState()
+
+    object Modify: ToDoDetailState()
+
+    object Write: ToDoDetailState()
+
     object Error: ToDoDetailState()
 }

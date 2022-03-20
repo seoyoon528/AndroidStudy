@@ -7,7 +7,7 @@ class DefaultToDoRepository: ToDoRepository {       //  구현체
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertToDoItem(toDoItem: ToDoEntity) {
+    override suspend fun insertToDoItem(toDoItem: ToDoEntity): Long {
         TODO("Not yet implemented")
     }
 
@@ -24,6 +24,10 @@ class DefaultToDoRepository: ToDoRepository {       //  구현체
     }
 
     override suspend fun deleteAll() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteToDoItem(itemId: Long): Boolean {
         TODO("Not yet implemented")
     }
 

@@ -8,7 +8,7 @@ interface ToDoRepository {
     // Coroutine
     suspend fun getToDoList(): List<ToDoEntity>
 
-    suspend fun insertToDoItem(toDoItem: ToDoEntity)
+    suspend fun insertToDoItem(toDoItem: ToDoEntity): Long
 
     suspend fun insertToDoList(toDoList: List<ToDoEntity>)
 
@@ -17,5 +17,7 @@ interface ToDoRepository {
     suspend fun getToDoItem(itemId: Long): ToDoEntity?
 
     suspend fun deleteAll()
+
+    suspend fun deleteToDoItem(itemId: Long): Boolean       //  지워졌는지 여부 확인을 위해 Boolean
 
 }

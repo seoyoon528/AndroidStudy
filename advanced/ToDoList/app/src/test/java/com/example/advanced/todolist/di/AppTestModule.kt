@@ -17,7 +17,10 @@ internal val AppTestModule = module {
         DetailViewModel(
             detailMode = detailMode,
             id = id,
-            get()
+            get(),       // getToDoItemUseCase
+            get(),      // deleteToDoItemUseCase
+            get(),       // updateToDoUseCase
+            get()       //  insertToDoItemUseCase
         )
     }       // detailViewModel 주입받음
 
@@ -28,6 +31,7 @@ internal val AppTestModule = module {
     factory { UpdateToDoListUseCase(get()) }
     factory { GetToDoItemUseCase(get()) }
     factory { DeleteAllToDoItemUseCase(get()) }
+    factory { DeleteToDoItemUseCase(get()) }
 
     // Repository
     single<ToDoRepository> { TestToDoRepository() }
