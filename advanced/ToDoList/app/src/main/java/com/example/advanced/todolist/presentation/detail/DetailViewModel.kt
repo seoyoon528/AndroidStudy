@@ -8,7 +8,7 @@ import com.example.advanced.todolist.domain.todo.DeleteToDoItemUseCase
 import com.example.advanced.todolist.domain.todo.GetToDoItemUseCase
 import com.example.advanced.todolist.domain.todo.InsertToDoItemUseCase
 import com.example.advanced.todolist.domain.todo.UpdateToDoListUseCase
-import com.example.advanced.todolist.presentation.list.BaseViewModel
+import com.example.advanced.todolist.presentation.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -25,6 +25,10 @@ internal class DetailViewModel(
 
     private var _toDoDetailLiveData = MutableLiveData<ToDoDetailState>(ToDoDetailState.UnInitialized)
     val todoDetailLiveData: LiveData<ToDoDetailState> = _toDoDetailLiveData
+
+    fun setModifyMode() = viewModelScope.launch {
+        _toDoDetailLiveData.postValue(ToDoDetailState.Modify)
+    }
 
 
     override fun fetchData(): Job = viewModelScope.launch{
@@ -53,11 +57,8 @@ internal class DetailViewModel(
         _toDoDetailLiveData.postValue(ToDoDetailState.Loading)
 
         try {
-            if (deleteToDoItemUseCase(id)) {        // 이 UseCase의 리턴 값이 true라면
-                _toDoDetailLiveData.postValue(ToDoDetailState.Delete)       // ToDoDetailState = Delete
-            } else {
-                _toDoDetailLiveData.postValue(ToDoDetailState.Error)
-            }
+            deleteToDoItemUseCase(id)
+            _toDoDetailLiveData.postValue(ToDoDetailState.Delete)       // ToDoDetailState = Delete
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
             _toDoDetailLiveData.postValue(ToDoDetailState.Error)

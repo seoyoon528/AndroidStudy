@@ -14,11 +14,15 @@ import com.example.advanced.todolist.domain.todo.UpdateToDoListUseCase
 import com.example.advanced.todolist.presentation.detail.DetailMode
 import com.example.advanced.todolist.presentation.detail.DetailViewModel
 import com.example.advanced.todolist.presentation.list.ListViewModel
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 internal val AppModule = module {
+
+    single { Dispatchers.Main }
+    single { Dispatchers.IO }
 
     // ViewModel
     viewModel { ListViewModel(get(), get(), get()) }      // ListViewModel 주입받음
