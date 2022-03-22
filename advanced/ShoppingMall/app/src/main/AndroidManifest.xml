@@ -8,7 +8,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ShoppingMall">
+        android:theme="@style/Theme.ShoppingMall"
+        android:name=".ShoppingMallApplication">        //  application 실행 시 overriding하도록
         <activity
             android:name=".MainActivity"
             android:exported="true">
