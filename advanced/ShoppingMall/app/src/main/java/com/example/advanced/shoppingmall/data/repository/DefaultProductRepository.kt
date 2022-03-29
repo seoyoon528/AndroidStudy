@@ -15,9 +15,9 @@ class DefaultProductRepository (        //  주입 받을 것들
     // Repository 구현체
     override suspend fun getProductList(): List<ProductEntity> = withContext(ioDispatcher) {
         val response = productApi.getProducts()
-        return@withContext if (response.isSuccessful) {
-            response.body()?.items?.map { it.toEntity() } ?: listOf()
-        } else {
+        return@withContext if (response.isSuccessful) {         // 만약 response가 success라면
+            response.body()?.items?.map { it.toEntity() } ?: listOf()           // 해당 response의 body(item)를 꺼냄
+        } else {            // 만약 null 값이라면
             listOf()
         }
     }
