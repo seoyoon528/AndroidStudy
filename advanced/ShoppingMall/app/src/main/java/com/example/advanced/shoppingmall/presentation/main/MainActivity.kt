@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import com.example.advanced.shoppingmall.R
 import com.example.advanced.shoppingmall.databinding.ActivityMainBinding
 import com.example.advanced.shoppingmall.presentation.BaseActivity
+import com.example.advanced.shoppingmall.presentation.BaseFragment
 import com.example.advanced.shoppingmall.presentation.list.ProductListFragment
 import com.example.advanced.shoppingmall.presentation.profile.ProfileFragment
 import org.koin.android.ext.android.inject
@@ -14,8 +15,6 @@ internal class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>()
     override fun getViewBinding(): ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)            // ViewBinding
 
     override val viewModel: MainViewModel by inject<MainViewModel> ()          // koin 모듈로 주입
-
-    override fun observeData() {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,4 +58,16 @@ internal class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>()
                 .commitAllowingStateLoss()          // 화면 회전 시 발생하는 오류 커밋
         }
     }
+
+    override fun observeData() = viewModel.mainStateLiveData.observe(this) {
+        when (it) {
+            is MainState.RefreshOrderList -> {
+                binding.bottomNav.selectedItemId = R.id.menu_profile
+
+                val fragment = supportFragmentManager.findFragmentByTag(ProfileFragment.TAG)
+                (fragment as? BaseFragment<*, *>)?.viewModel?.fetchData()           // BaseFragment Type Casting
+            }
+        }
+    }
+
 }

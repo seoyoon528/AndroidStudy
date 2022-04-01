@@ -8,21 +8,23 @@ import com.example.advanced.shoppingmall.data.repository.DefaultProductRepositor
 import com.example.advanced.shoppingmall.data.repository.ProductRepository
 import com.example.advanced.shoppingmall.domain.GetProductItemUseCase
 import com.example.advanced.shoppingmall.domain.GetProductListUseCase
+import com.example.advanced.shoppingmall.domain.OrderProductItemUseCase
+import com.example.advanced.shoppingmall.presentation.detail.ProductDetailViewModel
 import com.example.advanced.shoppingmall.presentation.list.ProductListViewModel
 import com.example.advanced.shoppingmall.presentation.main.MainViewModel
 import com.example.advanced.shoppingmall.presentation.profile.ProfileViewModel
 import kotlinx.coroutines.Dispatchers
-import org.koin.android.experimental.dsl.viewModel
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val AppModule = module {
+internal val AppModule = module {
     // Koin에 주입
 
     // ViewModels
     viewModel { MainViewModel() }
     viewModel { ProductListViewModel(get()) }
     viewModel { ProfileViewModel() }
+    viewModel { (productId: Long) -> ProductDetailViewModel(productId, get(), get()) }             // get() :: GetProductItemUseCase
 
     // Coroutines Dispatchers
     single { Dispatchers.Main }
@@ -31,6 +33,7 @@ val AppModule = module {
     // UseCases
     factory { GetProductItemUseCase(get()) }
     factory { GetProductListUseCase(get()) }
+    factory { OrderProductItemUseCase(get()) }
 
     // Repositories
     single<ProductRepository> { DefaultProductRepository(get(), get(), get()) }         // ProductRepository를 interface type으로 주입받을 수 있게됨
