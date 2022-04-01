@@ -3,4 +3,5 @@
     <string name="my">My</string>
     <string name="products">쇼핑</string>
     <string name="empty_products_text">상품 리스트가 존재하지 않습니다.</string>
+    <string name="order">주문하기</string>
 </resources>
